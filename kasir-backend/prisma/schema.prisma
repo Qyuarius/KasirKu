@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  nama      String
+  username  String   @unique
+  password  String
+  role      String   // kasir / admin
+  aktif     Boolean  @default(true)
+  transaksi Transaksi[]
+}
+
+model Produk {
+  id       Int    @id @default(autoincrement())
+  kode     String @unique
+  barcode  String?
+  nama     String
+  harga    Float
+  stok     Int
+}
+
+model Transaksi {
+  id           String   @id @default(uuid())
+  nomor_nota   String
+  user_id      String
+  total        Float
+  bayar        Float
+  kembalian    Float
+  status       String
+  created_at   DateTime @default(now())
+
+  user         User @relation(fields: [user_id], references: [id])
+  detail       DetailTransaksi[]
+}
+
+model DetailTransaksi {
+  id            Int    @id @default(autoincrement())
+  transaksi_id  String
+  produk_id     Int
+  nama_produk   String
+  harga_satuan  Float
+  qty           Int
+  subtotal      Float
+
+  transaksi     Transaksi @relation(fields: [transaksi_id], references: [id])
+}
