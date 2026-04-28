@@ -140,11 +140,6 @@ function LoginPage({ onLogin }) {
     }
   };
 
-  const hints = [
-    { label: "Admin", user: "admin", pass: "admin123" },
-    { label: "Kasir", user: "budi", pass: "budi123" },
-  ];
-
   return (
     <div className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-slate-950 px-6 py-10 font-['Manrope',sans-serif]">
       <div
@@ -238,21 +233,6 @@ function LoginPage({ onLogin }) {
           </button>
 
           <div className="mt-4 text-center text-xs text-slate-500">Lupa password? Hubungi admin.</div>
-        </div>
-
-        <div className="mt-5 rounded-3xl border border-emerald-500/15 bg-emerald-500/10 p-4">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-200/90">Demo</div>
-          <div className="mt-2 grid grid-cols-2 gap-2">
-            {hints.map(h => (
-              <button
-                key={h.user}
-                onClick={() => { setUsername(h.user); setPassword(h.pass); setError(""); }}
-                className="h-10 rounded-2xl border border-white/10 bg-white/5 px-3 text-xs font-semibold text-slate-200 transition hover:bg-white/10 active:scale-[0.99]"
-              >
-                {h.label} <span className="text-slate-400">({h.user})</span>
-              </button>
-            ))}
-          </div>
         </div>
 
         <div className="mt-6 text-center text-xs text-slate-600">KasirKu</div>
