@@ -1,6 +1,92 @@
 import { useState, useReducer, useRef, useEffect } from "react";
 import api from "./api";
 
+function Icon({ size = 18, children, className = "" }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className={className}
+    >
+      {children}
+    </svg>
+  );
+}
+
+function IconSearch(props) {
+  return (
+    <Icon {...props}>
+      <path d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" />
+      <path d="M21 21l-4.3-4.3" />
+    </Icon>
+  );
+}
+
+function IconCamera(props) {
+  return (
+    <Icon {...props}>
+      <path d="M20 20H4a3 3 0 0 1-3-3V9a3 3 0 0 1 3-3h3l2-2h6l2 2h3a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3Z" />
+      <path d="M12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
+    </Icon>
+  );
+}
+
+function IconX(props) {
+  return (
+    <Icon {...props}>
+      <path d="M18 6 6 18" />
+      <path d="M6 6l12 12" />
+    </Icon>
+  );
+}
+
+function IconTrash(props) {
+  return (
+    <Icon {...props}>
+      <path d="M3 6h18" />
+      <path d="M8 6V4h8v2" />
+      <path d="M19 6l-1 14H6L5 6" />
+      <path d="M10 11v6" />
+      <path d="M14 11v6" />
+    </Icon>
+  );
+}
+
+function IconMinus(props) {
+  return (
+    <Icon {...props}>
+      <path d="M5 12h14" />
+    </Icon>
+  );
+}
+
+function IconPlus(props) {
+  return (
+    <Icon {...props}>
+      <path d="M12 5v14" />
+      <path d="M5 12h14" />
+    </Icon>
+  );
+}
+
+function IconPrint(props) {
+  return (
+    <Icon {...props}>
+      <path d="M6 9V4h12v5" />
+      <path d="M6 18h12v2H6z" />
+      <path d="M6 14h12v4H6z" />
+      <path d="M6 12H5a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v1a3 3 0 0 1-3 3h-1" />
+    </Icon>
+  );
+}
+
 function useMediaQuery(query) {
   const getMatch = () => {
     if (typeof window === "undefined" || !window.matchMedia) return false;
@@ -37,7 +123,6 @@ function LoginPage({ onLogin }) {
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [focused, setFocused] = useState("");
 
   const handleSubmit = async () => {
     if (!username || !password) { setError("Username dan password wajib diisi."); return; }
@@ -56,110 +141,122 @@ function LoginPage({ onLogin }) {
   };
 
   const hints = [
-    { label: "Admin", user: "admin", pass: "admin123", icon: "👑" },
-    { label: "Kasir", user: "budi", pass: "budi123", icon: "🏪" },
+    { label: "Admin", user: "admin", pass: "admin123" },
+    { label: "Kasir", user: "budi", pass: "budi123" },
   ];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0a0f1a", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "Manrope, sans-serif", position: "relative", overflow: "hidden" }}>
-      <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <div className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-slate-950 px-6 py-10 font-['Manrope',sans-serif]">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-70"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(16,185,129,0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(16,185,129,0.10) 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+        }}
+      />
+      <div className="pointer-events-none absolute left-[10%] top-[15%] h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(16,185,129,0.22)_0%,transparent_70%)] blur-2xl" />
+      <div className="pointer-events-none absolute bottom-[10%] right-[8%] h-[360px] w-[360px] rounded-full bg-[radial-gradient(circle,rgba(74,222,128,0.12)_0%,transparent_70%)] blur-2xl" />
 
-      {/* Background grid */}
-      <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(0,108,73,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,108,73,0.06) 1px, transparent 1px)", backgroundSize: "48px 48px", pointerEvents: "none" }} />
-
-      {/* Glow blobs */}
-      <div style={{ position: "absolute", top: "15%", left: "10%", width: 400, height: 400, background: "radial-gradient(circle, rgba(0,108,73,0.18) 0%, transparent 70%)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", bottom: "10%", right: "8%", width: 320, height: 320, background: "radial-gradient(circle, rgba(74,222,128,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
-
-      <div style={{ width: "100%", maxWidth: 420, padding: "0 24px", position: "relative", zIndex: 1 }}>
-        {/* Logo */}
-        <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <div style={{ width: 64, height: 64, background: "linear-gradient(135deg, #006c49, #4ade80)", borderRadius: 20, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32, fontWeight: 900, color: "#fff", margin: "0 auto 16px", boxShadow: "0 8px 32px rgba(0,108,73,0.4)" }}>K</div>
-          <h1 style={{ fontFamily: "Space Grotesk", fontWeight: 900, fontSize: 32, color: "#fff", margin: 0, letterSpacing: "-0.03em" }}>KasirKu</h1>
-          <p style={{ color: "#475569", fontSize: 13, marginTop: 6, letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 600 }}>Management Pro</p>
+      <div className="relative w-full max-w-[420px]">
+        <div className="text-center">
+          <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-gradient-to-br from-emerald-600 to-emerald-400 text-2xl font-extrabold text-white shadow-[0_18px_50px_-28px_rgba(16,185,129,0.65)]">
+            K
+          </div>
+          <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-white">KasirKu</h1>
+          <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Point of Sale</p>
         </div>
 
-        {/* Card */}
-        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 28, padding: "36px 32px", backdropFilter: "blur(12px)" }}>
-          <h2 style={{ fontFamily: "Space Grotesk", fontWeight: 700, fontSize: 20, color: "#f1f5f9", margin: "0 0 6px" }}>Selamat datang 👋</h2>
-          <p style={{ color: "#475569", fontSize: 13, margin: "0 0 28px" }}>Masuk dengan akun yang diberikan admin</p>
+        <div className="mt-8 rounded-[28px] border border-white/10 bg-white/5 p-8 shadow-[0_28px_80px_-46px_rgba(2,6,23,0.9)] backdrop-blur-xl">
+          <div className="text-lg font-extrabold tracking-tight text-white">Masuk</div>
+          <div className="mt-1 text-sm text-slate-400">Gunakan akun yang diberikan admin.</div>
 
-          {/* Username */}
-          <div style={{ marginBottom: 16 }}>
-            <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Username</label>
-            <div style={{ position: "relative" }}>
-              <span style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", fontSize: 16 }}>👤</span>
-              <input
-                value={username}
-                onChange={e => { setUsername(e.target.value); setError(""); }}
-                onKeyDown={e => e.key === "Enter" && handleSubmit()}
-                onFocus={() => setFocused("user")}
-                onBlur={() => setFocused("")}
-                placeholder="contoh: budi"
-                style={{ width: "100%", paddingLeft: 44, paddingRight: 16, paddingTop: 14, paddingBottom: 14, background: "rgba(255,255,255,0.05)", border: "1.5px solid " + (focused === "user" ? "#006c49" : "rgba(255,255,255,0.08)"), borderRadius: 14, color: "#f1f5f9", fontSize: 15, outline: "none", boxSizing: "border-box", fontFamily: "Manrope", transition: "border-color 0.2s" }}
-              />
+          <div className="mt-6 space-y-4">
+            <div>
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">Username</label>
+              <div className="relative">
+                <div className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
+                  <Icon size={18}><path d="M20 21a8 8 0 1 0-16 0" /><path d="M12 13a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" /></Icon>
+                </div>
+                <input
+                  value={username}
+                  onChange={e => { setUsername(e.target.value); setError(""); }}
+                  onKeyDown={e => e.key === "Enter" && handleSubmit()}
+                  placeholder="contoh: budi"
+                  className="h-12 w-full rounded-2xl border border-white/10 bg-white/5 pl-11 pr-4 text-sm font-semibold text-white outline-none transition placeholder:text-slate-600 focus:border-emerald-500/70 focus:ring-4 focus:ring-emerald-500/15"
+                />
+              </div>
             </div>
+
+            <div>
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">Password</label>
+              <div className="relative">
+                <div className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
+                  <Icon size={18}><path d="M7 11V8a5 5 0 0 1 10 0v3" /><path d="M6 11h12v10H6z" /></Icon>
+                </div>
+                <input
+                  type={showPass ? "text" : "password"}
+                  value={password}
+                  onChange={e => { setPassword(e.target.value); setError(""); }}
+                  onKeyDown={e => e.key === "Enter" && handleSubmit()}
+                  placeholder="••••••••"
+                  className="h-12 w-full rounded-2xl border border-white/10 bg-white/5 pl-11 pr-12 text-sm font-semibold text-white outline-none transition placeholder:text-slate-600 focus:border-emerald-500/70 focus:ring-4 focus:ring-emerald-500/15"
+                />
+                <button
+                  onClick={() => setShowPass(v => !v)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-2xl border border-white/10 bg-white/5 text-slate-300 transition hover:bg-white/10 active:scale-[0.99]"
+                  title={showPass ? "Sembunyikan" : "Tampilkan"}
+                >
+                  {showPass ? (
+                    <Icon size={18}><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" /><path d="M9 5l-.6 1.2A10 10 0 0 0 3 12a10 10 0 0 0 18 0 10 10 0 0 0-3.4-4.8" /><path d="M2 2l20 20" /></Icon>
+                  ) : (
+                    <Icon size={18}><path d="M3 12s3-7 9-7 9 7 9 7-3 7-9 7-9-7-9-7Z" /><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" /></Icon>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {error && (
+              <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm font-semibold text-rose-200">
+                {error}
+              </div>
+            )}
           </div>
 
-          {/* Password */}
-          <div style={{ marginBottom: 10 }}>
-            <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Password</label>
-            <div style={{ position: "relative" }}>
-              <span style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", fontSize: 16 }}>🔒</span>
-              <input
-                type={showPass ? "text" : "password"}
-                value={password}
-                onChange={e => { setPassword(e.target.value); setError(""); }}
-                onKeyDown={e => e.key === "Enter" && handleSubmit()}
-                onFocus={() => setFocused("pass")}
-                onBlur={() => setFocused("")}
-                placeholder="••••••••"
-                style={{ width: "100%", paddingLeft: 44, paddingRight: 48, paddingTop: 14, paddingBottom: 14, background: "rgba(255,255,255,0.05)", border: "1.5px solid " + (focused === "pass" ? "#006c49" : "rgba(255,255,255,0.08)"), borderRadius: 14, color: "#f1f5f9", fontSize: 15, outline: "none", boxSizing: "border-box", fontFamily: "Manrope", transition: "border-color 0.2s" }}
-              />
-              <button onClick={() => setShowPass(v => !v)}
-                style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "#475569", cursor: "pointer", fontSize: 18, padding: 2 }}>
-                {showPass ? "🙈" : "👁️"}
-              </button>
-            </div>
-          </div>
-
-          {/* Error */}
-          {error && (
-            <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 10, padding: "10px 14px", marginBottom: 16, color: "#fca5a5", fontSize: 13, display: "flex", alignItems: "center", gap: 8 }}>
-              ⚠️ {error}
-            </div>
-          )}
-
-          {/* Submit */}
-          <button onClick={handleSubmit} disabled={loading}
-            style={{ width: "100%", marginTop: 20, padding: "16px 0", background: loading ? "rgba(0,108,73,0.5)" : "linear-gradient(135deg, #006c49, #059669)", color: "#fff", border: "none", borderRadius: 16, fontWeight: 800, fontSize: 16, fontFamily: "Space Grotesk", cursor: loading ? "not-allowed" : "pointer", letterSpacing: "-0.01em", boxShadow: loading ? "none" : "0 8px 24px rgba(0,108,73,0.35)", transition: "all 0.2s", display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
-            {loading ? (
-              <><span style={{ animation: "spin 1s linear infinite", display: "inline-block" }}>⏳</span> Memverifikasi...</>
-            ) : "Masuk →"}
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className={[
+              "mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-4 text-sm font-semibold text-white transition active:scale-[0.99]",
+              loading
+                ? "cursor-not-allowed bg-emerald-600/60"
+                : "bg-emerald-600 shadow-[0_18px_50px_-28px_rgba(16,185,129,0.65)] hover:bg-emerald-700",
+            ].join(" ")}
+          >
+            {loading && <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />}
+            {loading ? "Memverifikasi" : "Masuk"}
           </button>
 
-          <p style={{ textAlign: "center", color: "#334155", fontSize: 12, marginTop: 20, marginBottom: 0 }}>
-            Lupa password? Hubungi Admin Utama
-          </p>
+          <div className="mt-4 text-center text-xs text-slate-500">Lupa password? Hubungi admin.</div>
         </div>
 
-        {/* Demo hint */}
-        <div style={{ marginTop: 20, background: "rgba(0,108,73,0.08)", border: "1px solid rgba(0,108,73,0.15)", borderRadius: 16, padding: "14px 18px" }}>
-          <div style={{ fontSize: 11, color: "#4ade80", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>🧪 Demo — klik untuk isi otomatis</div>
-          <div style={{ display: "flex", gap: 8 }}>
+        <div className="mt-5 rounded-3xl border border-emerald-500/15 bg-emerald-500/10 p-4">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-200/90">Demo</div>
+          <div className="mt-2 grid grid-cols-2 gap-2">
             {hints.map(h => (
-              <button key={h.user} onClick={() => { setUsername(h.user); setPassword(h.pass); setError(""); }}
-                style={{ flex: 1, padding: "8px 12px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "#94a3b8", cursor: "pointer", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6, justifyContent: "center" }}>
-                {h.icon} {h.label} <span style={{ color: "#475569", fontFamily: "monospace" }}>({h.user})</span>
+              <button
+                key={h.user}
+                onClick={() => { setUsername(h.user); setPassword(h.pass); setError(""); }}
+                className="h-10 rounded-2xl border border-white/10 bg-white/5 px-3 text-xs font-semibold text-slate-200 transition hover:bg-white/10 active:scale-[0.99]"
+              >
+                {h.label} <span className="text-slate-400">({h.user})</span>
               </button>
             ))}
           </div>
         </div>
 
-        <p style={{ textAlign: "center", color: "#1e293b", fontSize: 11, marginTop: 24 }}>KasirKu v1.0 · © 2025</p>
+        <div className="mt-6 text-center text-xs text-slate-600">KasirKu</div>
       </div>
-
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }
@@ -200,7 +297,7 @@ const fmt = n => "Rp " + n.toLocaleString("id-ID");
 function Toast({ msg, onDone }) {
   useEffect(() => { const t = setTimeout(onDone, 2200); return () => clearTimeout(t); }, [onDone]);
   return (
-    <div style={{ position: "fixed", bottom: 32, left: "50%", transform: "translateX(-50%)", zIndex: 9999, background: "#0f172a", color: "#fff", padding: "12px 24px", borderRadius: 14, fontWeight: 600, fontSize: 14, boxShadow: "0 8px 32px rgba(0,0,0,0.3)", whiteSpace: "nowrap" }}>
+    <div className="fixed bottom-6 left-1/2 z-[9999] -translate-x-1/2 rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-sm font-semibold text-white shadow-[0_18px_40px_-24px_rgba(2,6,23,0.65)] backdrop-blur">
       {msg}
     </div>
   );
@@ -211,113 +308,66 @@ function ReceiptModal({ tx, user, onClose }) {
   const isMobile = useMediaQuery("(max-width: 640px)");
   const cashierName = tx.user?.nama || user.nama;
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,23,42,0.7)", backdropFilter: "blur(6px)", display: "flex", alignItems: isMobile ? "stretch" : "center", justifyContent: "center" }}>
-      <div style={{ background: "#fff", borderRadius: isMobile ? 0 : 24, width: isMobile ? "100%" : 360, height: isMobile ? "100%" : "auto", overflow: "hidden", boxShadow: "0 32px 80px rgba(0,0,0,0.3)", display: "flex", flexDirection: "column" }}>
-        <div style={{ background: "#006c49", color: "#fff", padding: "28px 28px 20px", textAlign: "center" }}>
-          <div style={{ fontSize: 40, marginBottom: 8 }}>✅</div>
-          <div style={{ fontSize: 20, fontWeight: 800, fontFamily: "Space Grotesk" }}>Pembayaran Berhasil!</div>
-          <div style={{ opacity: 0.7, fontSize: 12, marginTop: 4 }}>{tx.nomor_nota}</div>
-        </div>
-        <div style={{ padding: "20px 28px", fontFamily: "monospace", fontSize: 13, color: "#1e293b", overflowY: "auto", flex: 1 }}>
-          <div style={{ textAlign: "center", marginBottom: 12 }}>
-            <div style={{ fontWeight: 800, fontSize: 16 }}>KasirKu Store</div>
-            <div style={{ color: "#64748b", fontSize: 11 }}>Jl. Contoh No. 1, Jakarta</div>
-            <div style={{ color: "#64748b", fontSize: 11 }}>{new Date(tx.created_at).toLocaleString("id-ID")}</div>
-            <div style={{ color: "#64748b", fontSize: 11 }}>Kasir: {cashierName}</div>
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-950/60 backdrop-blur-sm">
+      <div
+        className={[
+          "flex w-full flex-col overflow-hidden border border-slate-200/60 bg-white shadow-[0_32px_80px_-40px_rgba(2,6,23,0.55)]",
+          isMobile ? "h-full rounded-none" : "h-auto max-h-[86vh] w-[380px] rounded-3xl",
+        ].join(" ")}
+      >
+        <div className="border-b border-white/10 bg-emerald-700 px-6 py-5 text-white">
+          <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-white/15">
+            <div className="h-5 w-5 rounded-full border-2 border-white/35 border-t-white" />
           </div>
-          <div style={{ borderTop: "1px dashed #e2e8f0", margin: "10px 0" }} />
-          {tx.detail.map(i => (
-            <div key={i.id} style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-              <span style={{ flex: 1 }}>{i.nama_produk} x{i.qty}</span>
-              <span style={{ fontWeight: 600 }}>{fmt(i.harga_satuan * i.qty)}</span>
-            </div>
-          ))}
-          <div style={{ borderTop: "1px dashed #e2e8f0", margin: "10px 0" }} />
-          <div style={{ display: "flex", justifyContent: "space-between" }}><span>Total</span><b>{fmt(tx.total)}</b></div>
-          <div style={{ display: "flex", justifyContent: "space-between" }}><span>Bayar</span><b>{fmt(tx.bayar)}</b></div>
-          <div style={{ display: "flex", justifyContent: "space-between", color: "#006c49", fontWeight: 800 }}><span>Kembalian</span><b>{fmt(tx.kembalian)}</b></div>
-          <div style={{ borderTop: "1px dashed #e2e8f0", margin: "10px 0" }} />
-          <div style={{ textAlign: "center", color: "#94a3b8", fontSize: 11, fontStyle: "italic" }}>Terima kasih telah berbelanja!</div>
+          <div className="mt-3 text-center text-lg font-extrabold tracking-tight">Pembayaran Berhasil</div>
+          <div className="mt-1 text-center text-xs font-medium text-white/70">{tx.nomor_nota}</div>
         </div>
-        <div style={{ padding: "0 28px 24px", display: "flex", gap: 10 }}>
-          <button onClick={() => window.print()} style={{ flex: 1, padding: "12px 0", background: "#006c49", color: "#fff", border: "none", borderRadius: 14, fontWeight: 700, cursor: "pointer", fontSize: 14 }}>
-            🖨️ Cetak
-          </button>
-          <button onClick={onClose} style={{ flex: 1, padding: "12px 0", background: "#f1f5f9", color: "#475569", border: "none", borderRadius: 14, fontWeight: 700, cursor: "pointer", fontSize: 14 }}>
-            Nota Baru
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
-// ── PAYMENT MODAL ──────────────────────────────────────────────────────────────
-function PaymentModal({ total, onConfirm, onClose }) {
-  const isMobile = useMediaQuery("(max-width: 640px)");
-  const [paid, setPaid] = useState("");
-  const paidNum = parseInt(paid.replace(/\D/g, "") || "0");
-  const change = paidNum - total;
-  const valid = paidNum >= total;
-
-  const quickAmounts = [total, Math.ceil(total / 10000) * 10000, Math.ceil(total / 50000) * 50000, 100000].filter((v, i, a) => a.indexOf(v) === i).slice(0, 4);
-
-  return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(15,23,42,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: isMobile ? "stretch" : "center", justifyContent: "center" }}>
-      <div style={{ background: "#fff", borderRadius: isMobile ? 0 : 28, width: isMobile ? "100%" : 420, height: isMobile ? "100%" : "auto", overflow: "hidden", boxShadow: "0 32px 80px rgba(0,0,0,0.25)", display: "flex", flexDirection: "column" }}>
-        <div style={{ background: "#0f172a", color: "#fff", padding: "24px 28px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div>
-            <div style={{ fontSize: 18, fontWeight: 800, fontFamily: "Space Grotesk" }}>Proses Pembayaran</div>
-            <div style={{ opacity: 0.5, fontSize: 12 }}>Masukkan nominal uang bayar</div>
-          </div>
-          <button onClick={onClose} style={{ background: "rgba(255,255,255,0.1)", border: "none", color: "#fff", borderRadius: 10, padding: "6px 12px", cursor: "pointer", fontSize: 18 }}>✕</button>
-        </div>
-        <div style={{ padding: "24px 28px", overflowY: "auto", flex: 1 }}>
-          <div style={{ marginBottom: 16 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, fontSize: 14, color: "#64748b" }}>
-              <span>Total Tagihan</span>
-              <span style={{ fontWeight: 800, color: "#0f172a", fontSize: 18 }}>{fmt(total)}</span>
-            </div>
+        <div className="flex-1 overflow-y-auto px-6 py-5 font-mono text-[13px] text-slate-900">
+          <div className="mb-3 text-center">
+            <div className="text-[15px] font-extrabold">KasirKu Store</div>
+            <div className="mt-1 text-[11px] text-slate-500">Jl. Contoh No. 1, Jakarta</div>
+            <div className="text-[11px] text-slate-500">{new Date(tx.created_at).toLocaleString("id-ID")}</div>
+            <div className="text-[11px] text-slate-500">Kasir: {cashierName}</div>
           </div>
 
-          <div style={{ marginBottom: 16 }}>
-            <label style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 8 }}>Uang Bayar</label>
-            <div style={{ position: "relative" }}>
-              <span style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", fontWeight: 700, color: "#94a3b8", fontSize: 14 }}>Rp</span>
-              <input
-                autoFocus
-                type="text"
-                value={paid}
-                onChange={e => setPaid(e.target.value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, "."))}
-                placeholder="0"
-                style={{ width: "100%", paddingLeft: 48, paddingRight: 16, paddingTop: 16, paddingBottom: 16, border: "2px solid " + (valid ? "#006c49" : "#e2e8f0"), borderRadius: 16, fontSize: 24, fontWeight: 800, outline: "none", boxSizing: "border-box", fontFamily: "Space Grotesk", color: "#0f172a" }}
-              />
-            </div>
-          </div>
+          <div className="my-3 border-t border-dashed border-slate-200" />
 
-          <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
-            {quickAmounts.map(a => (
-              <button key={a} onClick={() => setPaid(a.toLocaleString("id-ID"))}
-                style={{ flex: "1 1 auto", padding: "8px 4px", background: paidNum === a ? "#006c49" : "#f1f5f9", color: paidNum === a ? "#fff" : "#475569", border: "none", borderRadius: 10, fontWeight: 700, cursor: "pointer", fontSize: 12 }}>
-                {fmt(a)}
-              </button>
+          <div className="space-y-1">
+            {tx.detail.map(i => (
+              <div key={i.id} className="flex items-start justify-between gap-3">
+                <span className="min-w-0 flex-1">{i.nama_produk} x{i.qty}</span>
+                <span className="font-semibold">{fmt(i.harga_satuan * i.qty)}</span>
+              </div>
             ))}
           </div>
 
-          <div style={{ background: valid ? "#f0fdf4" : "#f8fafc", border: "1px solid " + (valid ? "#bbf7d0" : "#e2e8f0"), borderRadius: 16, padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-            <span style={{ fontWeight: 700, color: valid ? "#15803d" : "#94a3b8", fontSize: 13 }}>Kembalian</span>
-            <span style={{ fontWeight: 800, fontSize: 22, color: valid ? "#16a34a" : "#cbd5e1", fontFamily: "Space Grotesk" }}>{valid ? fmt(change) : "—"}</span>
+          <div className="my-3 border-t border-dashed border-slate-200" />
+
+          <div className="space-y-1">
+            <div className="flex justify-between"><span>Total</span><span className="font-bold">{fmt(tx.total)}</span></div>
+            <div className="flex justify-between"><span>Bayar</span><span className="font-bold">{fmt(tx.bayar)}</span></div>
+            <div className="flex justify-between font-extrabold text-emerald-700"><span>Kembalian</span><span>{fmt(tx.kembalian)}</span></div>
           </div>
 
-          <div style={{ display: "flex", gap: 12 }}>
-            <button onClick={onClose} style={{ flex: 1, padding: "14px 0", background: "#f1f5f9", color: "#64748b", border: "none", borderRadius: 16, fontWeight: 700, cursor: "pointer", fontSize: 14 }}>
-              Kembali
-            </button>
-            <button onClick={() => valid && onConfirm(paidNum, change)} disabled={!valid}
-              style={{ flex: 2, padding: "14px 0", background: valid ? "#006c49" : "#e2e8f0", color: valid ? "#fff" : "#94a3b8", border: "none", borderRadius: 16, fontWeight: 800, cursor: valid ? "pointer" : "not-allowed", fontSize: 15, fontFamily: "Space Grotesk", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-              💳 Konfirmasi & Bayar
-            </button>
-          </div>
+          <div className="my-3 border-t border-dashed border-slate-200" />
+          <div className="text-center text-[11px] italic text-slate-500">Terima kasih telah berbelanja.</div>
+        </div>
+
+        <div className="flex gap-3 px-6 pb-6">
+          <button
+            onClick={() => window.print()}
+            className="flex h-11 flex-1 items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-4 text-sm font-semibold text-white shadow-[0_18px_40px_-28px_rgba(16,185,129,0.55)] transition hover:bg-emerald-700 active:scale-[0.99]"
+          >
+            <IconPrint className="text-white" size={18} />
+            Cetak
+          </button>
+          <button
+            onClick={onClose}
+            className="h-11 flex-1 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 active:scale-[0.99]"
+          >
+            Nota Baru
+          </button>
         </div>
       </div>
     </div>
@@ -1051,35 +1101,54 @@ function BarcodeScannerModal({ onClose, onDetected }) {
   }, [onClose, onDetected]);
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 200 }}>
-      <div style={{ width: isMobile ? "100%" : "min(92vw, 520px)", height: isMobile ? "100%" : "auto", background: "#0b1220", borderRadius: isMobile ? 0 : 24, overflow: "hidden", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 12px 36px rgba(0,0,0,0.4)", display: "flex", flexDirection: "column" }}>
-        <div style={{ padding: 16, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ color: "#f1f5f9", fontWeight: 800, fontFamily: "Space Grotesk" }}>Scan Barcode</div>
-          <button onClick={onClose} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", color: "#f1f5f9", borderRadius: 12, padding: "8px 12px", cursor: "pointer", fontWeight: 700 }}>
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm">
+      <div
+        className={[
+          "flex w-full flex-col overflow-hidden border border-white/10 bg-slate-900 shadow-[0_32px_80px_-40px_rgba(2,6,23,0.7)]",
+          isMobile ? "h-full rounded-none" : "max-w-[520px] rounded-3xl",
+        ].join(" ")}
+      >
+        <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-white/[0.04] px-5 py-4">
+          <div className="text-sm font-extrabold tracking-tight text-slate-100">Scan Barcode</div>
+          <button
+            onClick={onClose}
+            className="h-10 rounded-2xl border border-white/10 bg-white/[0.06] px-3 text-sm font-semibold text-slate-100 transition hover:bg-white/[0.10] active:scale-[0.99]"
+          >
             Tutup
           </button>
         </div>
 
-        <div style={{ position: "relative", background: "#000" }}>
-          <video ref={videoRef} playsInline muted style={{ width: "100%", height: isMobile ? "72vh" : 420, objectFit: "cover", display: "block" }} />
-          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
-            <div style={{ width: "70%", maxWidth: 360, height: 180, border: "2px solid rgba(74,222,128,0.85)", borderRadius: 18, boxShadow: "0 0 0 999px rgba(0,0,0,0.18) inset" }} />
+        <div className="relative bg-black">
+          <video
+            ref={videoRef}
+            playsInline
+            muted
+            className={["w-full object-cover", isMobile ? "h-[72vh]" : "h-[420px]"].join(" ")}
+          />
+
+          <div className="pointer-events-none absolute inset-0 grid place-items-center">
+            <div className="h-[180px] w-[70%] max-w-[360px] rounded-3xl border-2 border-emerald-400/80 shadow-[inset_0_0_0_999px_rgba(0,0,0,0.18)]" />
           </div>
+
           {!ready && !error && (
-            <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", color: "#e2e8f0", fontWeight: 700 }}>
-              Membuka kamera...
+            <div className="absolute inset-0 grid place-items-center">
+              <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-slate-900/70 px-4 py-3 text-sm font-semibold text-slate-100 backdrop-blur">
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/25 border-t-white" />
+                Membuka kamera
+              </div>
             </div>
           )}
+
           {error && (
-            <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
-              <div style={{ background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.25)", color: "#fecaca", padding: 14, borderRadius: 14, fontSize: 13, fontWeight: 600, textAlign: "center" }}>
+            <div className="absolute inset-0 grid place-items-center p-6">
+              <div className="max-w-[420px] rounded-2xl border border-rose-500/25 bg-rose-500/10 px-4 py-3 text-center text-sm font-semibold text-rose-200">
                 {error}
               </div>
             </div>
           )}
         </div>
 
-        <div style={{ padding: 16, color: "#94a3b8", fontSize: 12, lineHeight: 1.4 }}>
+        <div className="px-5 py-4 text-xs font-medium text-slate-400">
           Arahkan kamera ke barcode sampai terdeteksi otomatis.
         </div>
       </div>
@@ -1094,34 +1163,50 @@ function CashierPage({ user, isMobile, isTablet }) {
   const [showScanner, setShowScanner] = useState(false);
   const [mobileTab, setMobileTab] = useState("products");
   const [category, setCategory] = useState("All Items");
-  const [showPayment, setShowPayment] = useState(false);
   const [receipt, setReceipt] = useState(null);
   const [toast, setToast] = useState(null);
   const [orderNum] = useState(() => Math.floor(Math.random() * 9000) + 1000);
+  const [paid, setPaid] = useState("");
 
   const [products, setProducts] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(false);
+  const [productsError, setProductsError] = useState("");
 
-  const refreshProducts = async () => {
+  const fetchProducts = async (searchValue) => {
     try {
-      const q = search ? `?search=${encodeURIComponent(search)}` : "";
+      setProductsError("");
+      setProductsLoading(true);
+      const q = searchValue ? `?search=${encodeURIComponent(searchValue)}` : "";
       const response = await api.get("/produk" + q);
       setProducts(response.data);
-    } catch (err) {
-      console.error("Gagal ambil produk:", err);
+    } catch {
+      setProductsError("Gagal memuat produk. Coba lagi.");
+    } finally {
+      setProductsLoading(false);
     }
+  };
+
+  const refreshProducts = async () => {
+    await fetchProducts(search);
   };
 
   useEffect(() => {
     let cancelled = false;
-    const q = search ? `?search=${encodeURIComponent(search)}` : "";
-
-    api.get("/produk" + q).then(res => {
-      if (cancelled) return;
-      setProducts(res.data);
-    }).catch(err => {
-      if (cancelled) return;
-      console.error("Gagal ambil produk:", err);
-    });
+    (async () => {
+      try {
+        setProductsError("");
+        setProductsLoading(true);
+        const q = search ? `?search=${encodeURIComponent(search)}` : "";
+        const res = await api.get("/produk" + q);
+        if (cancelled) return;
+        setProducts(res.data);
+      } catch {
+        if (cancelled) return;
+        setProductsError("Gagal memuat produk. Coba lagi.");
+      } finally {
+        if (!cancelled) setProductsLoading(false);
+      }
+    })();
 
     return () => { cancelled = true; };
   }, [search]);
@@ -1132,11 +1217,15 @@ function CashierPage({ user, isMobile, isTablet }) {
   });
 
   const subtotal = cart.reduce((s, i) => s + i.harga * i.qty, 0);
+  const paidNum = parseInt(paid.replace(/\D/g, "") || "0");
+  const change = paidNum - subtotal;
+  const validPayment = cart.length > 0 && paidNum >= subtotal;
+  const quickAmounts = [subtotal, Math.ceil(subtotal / 10000) * 10000, Math.ceil(subtotal / 50000) * 50000, 100000].filter((v, i, a) => a.indexOf(v) === i).slice(0, 4);
 
   const handleAdd = (p) => {
     if (p.stok === 0) return;
     dispatch({ type: "ADD", product: p });
-    setToast(`📦 ${p.nama} ditambahkan`);
+    setToast(`${p.nama} ditambahkan`);
   };
 
   const handleBarcodeDetected = async (code) => {
@@ -1169,7 +1258,6 @@ function CashierPage({ user, isMobile, isTablet }) {
         total: subtotal,
         bayar: paid
       });
-      setShowPayment(false);
       setReceipt(response.data);
       refreshProducts();
     } catch (err) {
@@ -1180,10 +1268,11 @@ function CashierPage({ user, isMobile, isTablet }) {
   const handleCloseReceipt = () => {
     setReceipt(null);
     dispatch({ type: "CLEAR" });
+    setPaid("");
   };
 
   return (
-    <div style={{ display: "flex", flex: 1, overflow: "hidden", height: "100%", flexDirection: isMobile ? "column" : "row" }}>
+    <div className="flex h-full w-full flex-1 flex-col overflow-hidden bg-slate-50">
       {showScanner && (
         <BarcodeScannerModal
           onClose={() => setShowScanner(false)}
@@ -1191,145 +1280,329 @@ function CashierPage({ user, isMobile, isTablet }) {
         />
       )}
       {isMobile && (
-        <div style={{ display: "flex", gap: 8, padding: "12px 16px", background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
-          <button onClick={() => setMobileTab("products")} style={{ flex: 1, padding: "10px 12px", borderRadius: 12, border: "1px solid " + (mobileTab === "products" ? "#006c49" : "#e2e8f0"), background: mobileTab === "products" ? "#f0fdf4" : "#fff", color: mobileTab === "products" ? "#006c49" : "#475569", fontWeight: 900, cursor: "pointer" }}>
+        <div className="flex gap-2 border-b border-slate-200/60 bg-white/70 px-4 py-3 backdrop-blur-md">
+          <button
+            onClick={() => setMobileTab("products")}
+            className={[
+              "h-11 flex-1 rounded-2xl border px-4 text-sm font-semibold transition active:scale-[0.99]",
+              mobileTab === "products"
+                ? "border-emerald-600 bg-emerald-50 text-emerald-700"
+                : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50",
+            ].join(" ")}
+          >
             Produk
           </button>
-          <button onClick={() => setMobileTab("cart")} style={{ flex: 1, padding: "10px 12px", borderRadius: 12, border: "1px solid " + (mobileTab === "cart" ? "#006c49" : "#e2e8f0"), background: mobileTab === "cart" ? "#f0fdf4" : "#fff", color: mobileTab === "cart" ? "#006c49" : "#475569", fontWeight: 900, cursor: "pointer" }}>
-            Keranjang ({cart.length})
+          <button
+            onClick={() => setMobileTab("cart")}
+            className={[
+              "h-11 flex-1 rounded-2xl border px-4 text-sm font-semibold transition active:scale-[0.99]",
+              mobileTab === "cart"
+                ? "border-emerald-600 bg-emerald-50 text-emerald-700"
+                : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50",
+            ].join(" ")}
+          >
+            Keranjang <span className="ml-1 text-slate-500">({cart.length})</span>
           </button>
         </div>
       )}
-      {/* LEFT: Products */}
-      {(!isMobile || mobileTab === "products") && (
-      <section style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", padding: isMobile ? "16px" : "28px 32px", gap: 16, background: "#f8fafc" }}>
-        {/* Search */}
-        <div style={{ display: "flex", gap: 12 }}>
-          <div style={{ flex: 1, position: "relative" }}>
-            <span style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", fontSize: 18, color: "#94a3b8" }}>🔍</span>
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Cari nama, kode, atau barcode..."
-              style={{ width: "100%", paddingLeft: 48, paddingRight: 52, paddingTop: 14, paddingBottom: 14, border: "none", borderRadius: 16, boxShadow: "0 1px 4px rgba(0,0,0,0.08)", outline: "none", fontFamily: "Manrope", fontSize: 14, boxSizing: "border-box", background: "#fff" }} />
-            <button title="Scan Barcode (butuh HTTPS + kamera)"
-              onClick={() => setShowScanner(true)}
-              style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#94a3b8" }}>📷</button>
-          </div>
-          <button style={{ padding: "0 18px", background: "#fff", border: "none", borderRadius: 16, boxShadow: "0 1px 4px rgba(0,0,0,0.08)", cursor: "pointer", fontSize: 20 }}>⚙️</button>
-        </div>
+      <div className="flex flex-1 overflow-hidden">
+        {(!isMobile || mobileTab === "products") && (
+          <section className="flex min-w-0 flex-1 flex-col gap-4 overflow-hidden px-4 py-4 sm:px-6 sm:py-6">
+            <div className="rounded-3xl border border-slate-200/60 bg-white/70 p-4 shadow-[0_18px_40px_-30px_rgba(2,6,23,0.25)] backdrop-blur-md">
+              <label className="mb-2 block text-sm font-semibold text-slate-700">Cari Produk / Barcode</label>
+              <div className="relative">
+                <IconSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                <input
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Ketik nama, kode, atau barcode..."
+                  className="h-12 w-full rounded-2xl border border-slate-200 bg-white pl-11 pr-14 text-sm font-medium text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/15"
+                />
+                <button
+                  title="Scan barcode (butuh HTTPS + kamera)"
+                  onClick={() => setShowScanner(true)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 grid h-10 w-10 place-items-center rounded-2xl border border-slate-200 bg-white text-slate-700 transition hover:bg-slate-50 active:scale-[0.99]"
+                >
+                  <IconCamera size={18} />
+                </button>
+              </div>
 
-        {/* Category Pills */}
-        <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4 }}>
-          {CATEGORIES.map(c => (
-            <button key={c} onClick={() => setCategory(c)}
-              style={{ padding: "8px 20px", borderRadius: 50, border: "none", cursor: "pointer", fontWeight: 700, fontSize: 12, whiteSpace: "nowrap", fontFamily: "Space Grotesk", transition: "all 0.15s", background: category === c ? "#006c49" : "#fff", color: category === c ? "#fff" : "#64748b", boxShadow: category === c ? "0 4px 12px rgba(0,108,73,0.3)" : "0 1px 4px rgba(0,0,0,0.06)" }}>
-              {c}
-            </button>
-          ))}
-        </div>
+              <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
+                {CATEGORIES.map(c => (
+                  <button
+                    key={c}
+                    onClick={() => setCategory(c)}
+                    className={[
+                      "h-9 shrink-0 rounded-full border px-4 text-xs font-semibold transition active:scale-[0.99]",
+                      category === c
+                        ? "border-emerald-600 bg-emerald-600 text-white shadow-[0_14px_30px_-22px_rgba(16,185,129,0.7)]"
+                        : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50",
+                    ].join(" ")}
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-        {/* Product Grid */}
-        <div style={{ flex: 1, overflowY: "auto", display: "grid", gridTemplateColumns: isMobile ? "repeat(2, minmax(0, 1fr))" : "repeat(auto-fill, minmax(200px, 1fr))", gap: 16, alignContent: "start", paddingRight: 4 }}>
-          {filtered.map(p => (
-            <div key={p.id} onClick={() => handleAdd(p)}
-              style={{ background: "#fff", borderRadius: 20, padding: 18, boxShadow: "0 1px 4px rgba(0,0,0,0.06)", border: "1.5px solid " + (p.stok === 0 ? "#f1f5f9" : "transparent"), cursor: p.stok === 0 ? "not-allowed" : "pointer", opacity: p.stok === 0 ? 0.55 : 1, transition: "all 0.18s", position: "relative" }}>
-              <div style={{ aspectRatio: "1", background: "#f8fafc", borderRadius: 14, marginBottom: 14, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 48, position: "relative" }}>
-                📦
-                {p.stok === 0 && (
-                  <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)", borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <span style={{ background: "#fff", color: "#0f172a", fontSize: 10, fontWeight: 900, padding: "3px 10px", borderRadius: 50 }}>HABIS</span>
+            {productsError && (
+              <div className="rounded-3xl border border-rose-200 bg-rose-50 px-4 py-3 shadow-[0_18px_40px_-34px_rgba(2,6,23,0.18)]">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="text-sm font-semibold text-rose-700">{productsError}</div>
+                  <button
+                    onClick={() => fetchProducts(search)}
+                    className="h-9 rounded-2xl border border-rose-200 bg-white px-3 text-xs font-semibold text-rose-700 transition hover:bg-rose-50 active:scale-[0.99]"
+                  >
+                    Coba lagi
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="min-h-0 flex-1 overflow-y-auto pr-1">
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
+                {productsLoading ? (
+                  Array.from({ length: 10 }).map((_, idx) => (
+                    <div
+                      key={idx}
+                      className="animate-pulse rounded-3xl border border-slate-200/60 bg-white p-4 shadow-[0_18px_40px_-34px_rgba(2,6,23,0.18)]"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="h-11 w-11 rounded-2xl bg-slate-100" />
+                        <div className="h-6 w-16 rounded-full bg-slate-100" />
+                      </div>
+                      <div className="mt-4 h-4 w-4/5 rounded bg-slate-100" />
+                      <div className="mt-2 h-3 w-2/5 rounded bg-slate-100" />
+                      <div className="mt-5 flex items-center justify-between">
+                        <div className="h-4 w-24 rounded bg-slate-100" />
+                        <div className="h-9 w-9 rounded-2xl bg-slate-100" />
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  filtered.map(p => {
+                    const disabled = p.stok === 0;
+                    const badge = disabled ? "Habis" : `${p.stok} unit`;
+                    const initials = String(p.nama || "P").trim().slice(0, 1).toUpperCase();
+
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() => handleAdd(p)}
+                        disabled={disabled}
+                        className={[
+                          "group relative rounded-3xl border bg-white/80 p-4 text-left shadow-[0_18px_40px_-32px_rgba(2,6,23,0.25)] backdrop-blur transition",
+                          disabled
+                            ? "cursor-not-allowed border-slate-200/60 opacity-60"
+                            : "border-slate-200/60 hover:-translate-y-[1px] hover:shadow-[0_18px_40px_-28px_rgba(2,6,23,0.35)] active:scale-[0.99]",
+                        ].join(" ")}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="grid h-11 w-11 place-items-center rounded-2xl bg-slate-100 text-base font-extrabold text-slate-700">
+                            {initials}
+                          </div>
+                          <div
+                            className={[
+                              "rounded-full px-2.5 py-1 text-[11px] font-semibold",
+                              disabled ? "bg-slate-100 text-slate-500" : "bg-emerald-50 text-emerald-700",
+                            ].join(" ")}
+                          >
+                            {badge}
+                          </div>
+                        </div>
+
+                        <div className="mt-3 text-sm font-semibold tracking-tight text-slate-900">{p.nama}</div>
+                        <div className="mt-1 text-[11px] font-medium uppercase tracking-[0.12em] text-slate-400">{p.kode}</div>
+
+                        <div className="mt-4 flex items-center justify-between">
+                          <div className="text-sm font-extrabold text-slate-900">{fmt(p.harga)}</div>
+                          <div
+                            className={[
+                              "grid h-9 w-9 place-items-center rounded-2xl border text-slate-700 transition",
+                              disabled ? "border-slate-200 bg-slate-50 text-slate-300" : "border-emerald-200 bg-emerald-50 text-emerald-700 group-hover:bg-emerald-100",
+                            ].join(" ")}
+                          >
+                            <IconPlus size={18} />
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })
+                )}
+
+                {!productsLoading && filtered.length === 0 && (
+                  <div className="col-span-full grid place-items-center py-16 text-center">
+                    <div className="mx-auto grid h-14 w-14 place-items-center rounded-3xl border border-slate-200 bg-white text-slate-400 shadow-[0_18px_40px_-32px_rgba(2,6,23,0.18)]">
+                      <IconSearch size={20} />
+                    </div>
+                    <div className="mt-3 text-sm font-semibold text-slate-700">Produk tidak ditemukan</div>
+                    <div className="mt-1 text-xs text-slate-500">Coba kata kunci lain atau scan barcode.</div>
                   </div>
                 )}
               </div>
-              {p.stok > 0 && (
-                <div style={{ position: "absolute", top: 14, right: 14, background: "rgba(0,108,73,0.1)", color: "#006c49", fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 8 }}>{p.stok} unit</div>
+            </div>
+          </section>
+        )}
+
+        {(!isMobile || mobileTab === "cart") && (
+          <aside
+            className={[
+              "flex w-full flex-col overflow-hidden border-l border-slate-200/60 bg-white/70 backdrop-blur-md",
+              isMobile ? "border-l-0 border-t border-slate-200/60" : isTablet ? "max-w-[380px]" : "max-w-[420px]",
+            ].join(" ")}
+          >
+            <div className="border-b border-slate-200/60 px-4 py-4 sm:px-6">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="text-base font-extrabold tracking-tight text-slate-900">Nota #{orderNum}</div>
+                  <div className="mt-1 text-xs font-medium uppercase tracking-[0.12em] text-slate-400">
+                    {cart.length} item · {new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}
+                  </div>
+                </div>
+                <button
+                  onClick={() => { dispatch({ type: "CLEAR" }); setPaid(""); }}
+                  className="grid h-11 w-11 place-items-center rounded-2xl border border-rose-200 bg-rose-50 text-rose-700 transition hover:bg-rose-100 active:scale-[0.99]"
+                  title="Bersihkan keranjang"
+                >
+                  <IconTrash size={18} />
+                </button>
+              </div>
+            </div>
+
+            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-6">
+              {cart.length === 0 ? (
+                <div className="grid h-full place-items-center text-center">
+                  <div>
+                    <div className="mx-auto grid h-14 w-14 place-items-center rounded-3xl border border-slate-200 bg-white text-slate-400 shadow-[0_18px_40px_-32px_rgba(2,6,23,0.18)]">
+                      <Icon size={20}><path d="M6 6h15l-1.5 9h-12Z" /><path d="M6 6l-2-2" /><path d="M9 22a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" /><path d="M18 22a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" /></Icon>
+                    </div>
+                    <div className="mt-3 text-sm font-semibold text-slate-700">Keranjang kosong</div>
+                    <div className="mt-1 text-xs text-slate-500">Klik produk untuk menambahkan ke nota.</div>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {cart.map(item => (
+                    <div key={item.id} className="rounded-3xl border border-slate-200/60 bg-white p-3 shadow-[0_18px_40px_-34px_rgba(2,6,23,0.18)]">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="truncate text-sm font-semibold text-slate-900">{item.nama}</div>
+                          <div className="mt-1 text-xs font-medium text-slate-500">{fmt(item.harga)} / unit</div>
+                        </div>
+                        <div className="text-sm font-extrabold text-slate-900">{fmt(item.harga * item.qty)}</div>
+                      </div>
+
+                      <div className="mt-3 flex items-center justify-between">
+                        <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 p-1">
+                          <button
+                            onClick={() => dispatch({ type: "DEC", id: item.id })}
+                            className="grid h-9 w-9 place-items-center rounded-full border border-slate-200 bg-white text-slate-700 transition hover:bg-slate-50 active:scale-[0.98]"
+                            title="Kurangi"
+                          >
+                            <IconMinus size={18} />
+                          </button>
+                          <div className="w-10 text-center text-sm font-extrabold text-slate-900">{item.qty}</div>
+                          <button
+                            onClick={() => dispatch({ type: "INC", id: item.id })}
+                            className="grid h-9 w-9 place-items-center rounded-full bg-emerald-600 text-white transition hover:bg-emerald-700 active:scale-[0.98]"
+                            title="Tambah"
+                          >
+                            <IconPlus size={18} className="text-white" />
+                          </button>
+                        </div>
+
+                        <button
+                          onClick={() => dispatch({ type: "REMOVE", id: item.id })}
+                          className="grid h-9 w-9 place-items-center rounded-2xl border border-slate-200 bg-white text-slate-400 transition hover:bg-slate-50 hover:text-slate-700 active:scale-[0.99]"
+                          title="Hapus item"
+                        >
+                          <IconX size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               )}
-              <div style={{ fontWeight: 700, fontSize: 13, color: "#0f172a", marginBottom: 2, fontFamily: "Space Grotesk" }}>{p.nama}</div>
-              <div style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10, fontFamily: "Space Grotesk" }}>{p.kode}</div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontWeight: 800, color: "#0f172a", fontSize: 14 }}>{fmt(p.harga)}</span>
-                <div style={{ width: 30, height: 30, background: p.stok === 0 ? "#f1f5f9" : "#f0fdf4", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, color: p.stok === 0 ? "#cbd5e1" : "#006c49" }}>＋</div>
-              </div>
             </div>
-          ))}
-          {filtered.length === 0 && (
-            <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "60px 0", color: "#94a3b8" }}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
-              <div style={{ fontWeight: 600 }}>Produk tidak ditemukan</div>
-            </div>
-          )}
-        </div>
-      </section>
-      )}
 
-      {/* RIGHT: Cart */}
-      {(!isMobile || mobileTab === "cart") && (
-      <section style={{ width: isMobile ? "100%" : (isTablet ? 380 : 420), background: "#fff", borderLeft: isMobile ? "none" : "1px solid #e2e8f0", borderTop: isMobile ? "1px solid #e2e8f0" : "none", display: "flex", flexDirection: "column", overflow: "hidden", flex: isMobile ? 1 : "unset" }}>
-        {/* Cart Header */}
-        <div style={{ padding: "24px 28px 20px", borderBottom: "1px solid #f1f5f9" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div>
-              <div style={{ fontFamily: "Space Grotesk", fontWeight: 800, fontSize: 18, color: "#0f172a" }}>Nota #{orderNum}</div>
-              <div style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 2 }}>
-                {cart.length} item{cart.length !== 1 ? "s" : ""} · {new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}
+            <div className="border-t border-slate-200/60 bg-white px-4 py-4 sm:px-6">
+              <div className="flex items-center justify-between text-sm text-slate-600">
+                <span>Subtotal</span>
+                <span className="font-semibold text-slate-700">{fmt(subtotal)}</span>
+              </div>
+
+              <div className="mt-3 flex items-end justify-between rounded-3xl bg-slate-50 p-4">
+                <div className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Total</div>
+                <div className="text-2xl font-extrabold tracking-tight text-slate-900">{fmt(subtotal)}</div>
+              </div>
+
+              <div className="mt-4 grid gap-3">
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">Bayar</label>
+                  <div className="relative">
+                    <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-400">Rp</span>
+                    <input
+                      inputMode="numeric"
+                      value={paid}
+                      onChange={e => setPaid(e.target.value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, "."))}
+                      placeholder="0"
+                      className={[
+                        "h-12 w-full rounded-2xl border bg-white pl-12 pr-4 text-sm font-semibold text-slate-900 outline-none transition",
+                        validPayment ? "border-emerald-500 focus:ring-4 focus:ring-emerald-500/15" : "border-slate-200 focus:ring-4 focus:ring-slate-200/60",
+                      ].join(" ")}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && validPayment) handleConfirmPayment(paidNum);
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {quickAmounts.map(a => (
+                    <button
+                      key={a}
+                      onClick={() => setPaid(a.toLocaleString("id-ID"))}
+                      className={[
+                        "h-9 flex-1 rounded-2xl border px-3 text-xs font-semibold transition active:scale-[0.99]",
+                        paidNum === a ? "border-emerald-600 bg-emerald-600 text-white" : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50",
+                      ].join(" ")}
+                    >
+                      {fmt(a)}
+                    </button>
+                  ))}
+                </div>
+
+                <div className={["flex items-center justify-between rounded-2xl border px-4 py-3", validPayment ? "border-emerald-200 bg-emerald-50" : "border-slate-200 bg-slate-50"].join(" ")}>
+                  <div className={["text-sm font-semibold", validPayment ? "text-emerald-700" : "text-slate-500"].join(" ")}>Kembalian</div>
+                  <div className={["text-sm font-extrabold", validPayment ? "text-emerald-700" : "text-slate-400"].join(" ")}>
+                    {validPayment ? fmt(change) : "—"}
+                  </div>
+                </div>
+
+                <div className="mt-1 flex gap-2">
+                  <button
+                    onClick={() => { dispatch({ type: "CLEAR" }); setPaid(""); }}
+                    className="h-12 flex-1 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 active:scale-[0.99]"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    onClick={() => validPayment && handleConfirmPayment(paidNum)}
+                    disabled={!validPayment}
+                    className={[
+                      "h-12 flex-[2] rounded-2xl px-4 text-sm font-semibold text-white shadow-[0_18px_40px_-28px_rgba(16,185,129,0.55)] transition active:scale-[0.99]",
+                      validPayment ? "bg-emerald-600 hover:bg-emerald-700" : "cursor-not-allowed bg-slate-200 text-slate-400 shadow-none",
+                    ].join(" ")}
+                  >
+                    Pay & Print
+                  </button>
+                </div>
               </div>
             </div>
-            <button onClick={() => dispatch({ type: "CLEAR" })}
-              style={{ background: "#fff5f5", border: "none", color: "#ef4444", borderRadius: 10, padding: "8px 12px", cursor: "pointer", fontSize: 18 }}>🗑️</button>
-          </div>
-        </div>
+          </aside>
+        )}
+      </div>
 
-        {/* Cart Items */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "16px 28px", display: "flex", flexDirection: "column", gap: 10 }}>
-          {cart.length === 0 ? (
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#cbd5e1", gap: 12 }}>
-              <div style={{ fontSize: 52 }}>🛒</div>
-              <div style={{ fontSize: 14, fontWeight: 600 }}>Keranjang kosong</div>
-              <div style={{ fontSize: 12, textAlign: "center" }}>Klik produk di sebelah kiri untuk menambahkan</div>
-            </div>
-          ) : cart.map(item => (
-            <div key={item.id} style={{ background: "#f8fafc", borderRadius: 16, padding: "12px 14px", display: "flex", gap: 12, alignItems: "center", border: "1px solid #f1f5f9" }}>
-              <div style={{ fontSize: 28, width: 44, height: 44, background: "#fff", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>📦</div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontWeight: 700, fontSize: 13, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.nama}</div>
-                <div style={{ fontSize: 11, color: "#94a3b8" }}>{fmt(item.harga)} / unit</div>
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#e2e8f0", borderRadius: 50, padding: "4px 6px" }}>
-                <button onClick={() => dispatch({ type: "DEC", id: item.id })} style={{ width: 26, height: 26, background: "#fff", border: "none", borderRadius: "50%", cursor: "pointer", fontWeight: 900, fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", color: "#475569" }}>−</button>
-                <span style={{ minWidth: 20, textAlign: "center", fontWeight: 800, fontSize: 14, fontFamily: "Space Grotesk" }}>{item.qty}</span>
-                <button onClick={() => dispatch({ type: "INC", id: item.id })} style={{ width: 26, height: 26, background: "#006c49", border: "none", borderRadius: "50%", cursor: "pointer", fontWeight: 900, fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}>+</button>
-              </div>
-              <div style={{ minWidth: 70, textAlign: "right" }}>
-                <div style={{ fontWeight: 800, fontSize: 13, color: "#0f172a" }}>{fmt(item.harga * item.qty)}</div>
-              </div>
-              <button onClick={() => dispatch({ type: "REMOVE", id: item.id })} style={{ background: "none", border: "none", color: "#cbd5e1", cursor: "pointer", fontSize: 16, padding: 2 }}>✕</button>
-            </div>
-          ))}
-        </div>
-
-        {/* Cart Footer */}
-        <div style={{ background: "#fff", borderTop: "1px solid #f1f5f9", padding: "20px 28px 24px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, color: "#64748b", marginBottom: 6 }}>
-            <span>Subtotal ({cart.length} item)</span>
-            <span>{fmt(subtotal)}</span>
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12, paddingTop: 12, borderTop: "1px solid #f1f5f9" }}>
-            <span style={{ fontSize: 13, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 700 }}>Total</span>
-            <span style={{ fontFamily: "Space Grotesk", fontWeight: 900, fontSize: 26, color: "#0f172a" }}>{fmt(subtotal)}</span>
-          </div>
-          <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
-            <button onClick={() => dispatch({ type: "CLEAR" })}
-              style={{ flex: 1, padding: "14px 0", background: "#f8fafc", color: "#94a3b8", border: "none", borderRadius: 16, fontWeight: 700, cursor: "pointer", fontSize: 13, fontFamily: "Space Grotesk" }}>
-              Batal Nota
-            </button>
-            <button onClick={() => cart.length > 0 && setShowPayment(true)} disabled={cart.length === 0}
-              style={{ flex: 2, padding: "14px 0", background: cart.length > 0 ? "#006c49" : "#e2e8f0", color: cart.length > 0 ? "#fff" : "#94a3b8", border: "none", borderRadius: 16, fontWeight: 800, cursor: cart.length > 0 ? "pointer" : "not-allowed", fontSize: 15, fontFamily: "Space Grotesk", boxShadow: cart.length > 0 ? "0 8px 20px rgba(0,108,73,0.25)" : "none", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-              💳 BAYAR SEKARANG
-            </button>
-          </div>
-        </div>
-      </section>
-      )}
-
-      {showPayment && <PaymentModal total={subtotal} onConfirm={handleConfirmPayment} onClose={() => setShowPayment(false)} />}
       {receipt && <ReceiptModal tx={receipt} user={user} onClose={handleCloseReceipt} />}
       {toast && <Toast msg={toast} onDone={() => setToast(null)} />}
     </div>
@@ -1418,7 +1691,7 @@ export default function App() {
 
             <nav style={{ flex: 1, padding: "4px 12px", overflowY: "auto" }}>
               {navItems.map(n => (
-                <button onClick={() => { setPage(n.id); setDrawerOpen(false); }}
+                <button key={n.id} onClick={() => { setPage(n.id); setDrawerOpen(false); }}
                   style={{ width: "100%", display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 16, border: "1px solid rgba(148,163,184,0.12)", cursor: "pointer", marginBottom: 8, textAlign: "left", fontFamily: "Space Grotesk", fontSize: 14, fontWeight: 700, background: page === n.id ? "rgba(74,222,128,0.12)" : "rgba(255,255,255,0.04)", color: page === n.id ? "#4ade80" : "#cbd5e1" }}>
                   <span style={{ fontSize: 18 }}>{n.icon}</span>{n.label}
                 </button>

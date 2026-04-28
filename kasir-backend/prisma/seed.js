@@ -18,7 +18,7 @@ async function main() {
   const hashed = await bcrypt.hash("admin123", 10);
 
   await pool.query(
-    "INSERT INTO user (id, nama, username, password, role, aktif) VALUES (UUID(), ?, ?, ?, ?, 1) " +
+    "INSERT INTO User (id, nama, username, password, role, aktif) VALUES (UUID(), ?, ?, ?, ?, 1) " +
       "ON DUPLICATE KEY UPDATE nama = VALUES(nama), password = VALUES(password), role = VALUES(role), aktif = VALUES(aktif)",
     ["Admin", "admin", hashed, "admin"]
   );
@@ -32,3 +32,4 @@ main()
   .finally(async () => {
     await pool.end();
   });
+console.log("Connecting to:", process.env.DATABASE_URL);
